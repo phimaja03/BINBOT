@@ -1,0 +1,64 @@
+ 1. Initialize YOLO Model: 
+o Load Pre-trained Model: 
+▪ Use the YOLO library to load a pre-trained model (segvil.pt). 
+▪ If the model fails to load, print an error message and terminate the program. 
+
+2. Open webcam: 
+o Capture Video Feed: 
+▪ Attempt to open the webcam using ‘cv2.VideoCapture(1)’. 
+▪ If it fails, print an error message and terminate the program. 
+
+3. Initialize Serial Communication: 
+o Establish Connection: 
+▪ Connect to the Arduino using ‘serial.Serial()’ with the 
+specified COM port (COM12) and baud rate (9600). 
+▪ If the connection fails, print an error message and terminate the program. 
+
+4. Set Confidence Threshold and Class Mapping: 
+o Define Threshold: 
+▪ Set a confidence threshold (0.65) for filtering detection results. 
+o Map Class Indices to Labels: 
+▪ Create a dictionary mapping YOLO model’s class indices to readable labels (ewaste, nonbiodegradable, recyclable, nonrecyclable). 
+
+5. Initialize Detection Control Flag: 
+o Set Initial State: 
+▪ Create a flag ‘wait_for_detection’ to ensure detection occurs only when the Arduino sends a signal. 
+
+6. Main detection Loop: 
+o Wait for Arduino Signal: 
+▪ Continuously check for the signal 'D' from Arduino via serial communication. 
+▪ If the signal is received: 
+➢ Print confirmation and allow detection by setting ‘wait_for_detection’ to False. 
+o Capture Webcam Frame: 
+▪ If detection is allowed: 
+➢ Read a frame from the webcam using ‘cap.read()’. 
+➢ If the frame capture fails, print an error message and terminate the loop. 
+o Perform Object detection: 
+▪ Pass the captured frame to the YOLO model for object detection. 
+▪ Iterate over the detected objects: 
+➢ Check if the confidence score of the detection is greater than or equal to the threshold. 
+➢ Extract the class ID and map it to the corresponding label using the ‘class_labels’ dictionary. 
+o Handle Detected Objects: 
+▪ For each detected object, send a specific signal to Arduino based on the detected class: 
+➢ 'ewaste': Send signal 'e' after a delay of 4 seconds. 
+➢ 'nonrecyclable': Send signal '3' after a delay of 4 seconds. 
+➢ 'biodegradable': Send signal '1' after a delay of 4 seconds. 
+➢ 'recyclable': Send signal '2' after a delay of 4 seconds. 
+▪ Set ‘detection_found’ to True and break from further detection processing for this frame. 
+o Reset detection Flag: 
+▪ If any object was detected: 
+➢ Reset ‘wait_for_detection’ to True, indicating the system is ready for the next detection signal. 
+o Visualize Results: 
+▪ Use YOLO’s visualization tools to annotate the detected objects on the current frame. 
+▪ Display the annotated frame in a window titled "YOLO RealTime Detection". 
+
+7. Handle User Termination: 
+o Stop on Key Press: 
+▪ Monitor for the 'q' key press. 
+▪ If pressed, terminate the loop. 
+
+8. Cleanup Resources: 
+o Release Resources: 
+▪ Release the webcam feed using ‘cap.release()’.
+▪ Close all OpenCV display windows using ‘cv2.destroyAllWindows()’. 
+▪ Close the serial connection to Arduino using ‘ser.close()’. 
