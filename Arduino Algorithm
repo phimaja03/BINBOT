@@ -1,0 +1,78 @@
+1. Library Inclusion: Include libraries for controlling the stepper motor 
+(Stepper), servo motor (Servo), and OLED display (Adafruit_SSD1306).
+
+2. Define Constants: 
+o Set the number of steps per revolution for the stepper motor. 
+o Define the dimensions and reset pin for the OLED display. 
+
+3. Object Creation:  
+o Instantiate a ‘Stepper’ object for controlling the stepper motor. 
+o Create a ‘Servo’ object for controlling the servo motor. 
+o Instantiate an ‘Adafruit_SSD1306’ object for controlling the OLED display. 
+
+4. Pin Definitions:  
+o Define pins for the servo motor, IR sensor, and stepper motor control. 
+
+5. Count Initilaization: 
+o Initialize counters for each waste type: biodegradable, recyclable, non-recyclable, and e-waste. 
+o Set flags for IR sensor readiness and object detection.
+
+6. Detection Array: 
+o Define an array to store detection signals and initialize its index to zero. 
+
+7. Setup Function: 
+o Attach the servo motor to its pin and set its initial position to 0 degrees. 
+o Set the speed of the stepper motor for optimal torque. 
+o Initialize serial communication for debugging and input handling. 
+o Configure the IR sensor pin as input. 
+o Initialize the OLED display, display a welcome message, and clear it for further use. 
+
+Main Loop: Waste Detection and Sorting: 
+1. Object detection: 
+o Check if the IR sensor is ready and an object is detected (low signal from the IR sensor). 
+o Store the detection signal in the array and increment the detection index. 
+o Mark the object as detected and update the OLED display. 
+o If any detections are stored, send a detection signal ('D') over Serial communication. 
+
+2. Waste Type Processing: 
+o If an object is detected and there is an incoming signal from a connected 
+
+Python program: 
+▪ Read the signal (‘incomingByte’) and identify the waste type 
+(1 for biodegradable, 2 for recyclable, etc.).
+
+3. Stepper Motor and Servo Actions: 
+o Based on the waste type: 
+▪ Biodegradable Waste (‘1’): 
+➢ Move the stepper motor to the original position. 
+➢ Activate the servo motor to drop the waste. 
+➢ Return the stepper motor to the original position. 
+▪ Recyclable Waste (‘2’): 
+➢ Rotate the stepper motor half a revolution clockwise. 
+➢ Activate the servo motor to drop the waste. 
+➢ Return the stepper motor to the original position. 
+▪ Non-Recyclable Waste (‘3’): 
+➢ Rotate the stepper motor two full revolutions clockwise. 
+➢ Activate the servo motor to drop the waste. 
+➢ Return the stepper motor to the original position. 
+▪ E-Waste (‘4’): 
+➢ Rotate the stepper motor half a revolution 
+counterclockwise. 
+➢ Activate the servo motor to drop the waste. 
+➢ Return the stepper motor to the original position. 
+
+4. Post- Processing: 
+o Reset the servo motor to 0 degrees. 
+o Reset flags (‘irSensorReady’, ‘objectDetected’) for new detections. 
+o Clear the detection array to prepare for new waste detection. 
+
+Display Update Function: 
+1.Clear the OLED display to prepare for a new message. 
+2.Print the counts for each waste type: 
+• First row: Biodegradable and Recyclable waste counts. 
+• Second row: Non-recyclable and E-Waste counts. 
+3.Update the display to show the new counts. 
+
+Detection Array Reset Function: 
+1.Iterate through the detection array and reset each element to a default value (e.g., ' '). 
+2.Reset the detection index to zero.
